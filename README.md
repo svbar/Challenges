@@ -27,4 +27,13 @@ Tech Stack:
  ```Management Server/ Jump Server to manage all the assets```
    - Ports 22
   
-   
+ <h1> Challenge 2 </h1>
+ 
+ Retrieve Metadata from AWS instance
+ Tech Stack : Python + AWS Cli
+ 
+ Usage: ```python metadata.py```
+        Enter AWS Access, secret key and region.
+        Then enter instance id
+        
+ 
