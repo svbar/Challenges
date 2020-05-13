@@ -1,6 +1,6 @@
 # Infra-challenges
 
-Challenge-1:
+<H1> Challenge-1:</h1>
 Create a 3- Tier Architecture infra setup.
 
 Solution:
