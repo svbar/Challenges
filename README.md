@@ -33,7 +33,12 @@ Tech Stack:
  Tech Stack : Python + AWS Cli
  
  Usage: ```python metadata.py```
+ 
         Enter AWS Access, secret key and region.
         Then enter instance id
         
- 
+  <h1> Challenge 3 </h1>
+  
+  A function to process JSON Object and Key
+  
+  
