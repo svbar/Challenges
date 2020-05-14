@@ -39,6 +39,8 @@ Tech Stack:
         
   <h1> Challenge 3 </h1>
   
-  A function to process JSON Object and Key
+  A function to process JSON nested object file and return the inner most value when passed nested values as key
+  
+  ``` Usage: python parser.py --file <nested_json_file) --key <key in a/b/c format> ```
   
   
