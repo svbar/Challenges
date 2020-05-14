@@ -67,7 +67,12 @@ resource "aws_security_group" "webtier1" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
     }
-
+ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["192.168.100.0/24"]
+    }
     egress {
       protocol    = "-1"
       from_port   = 0
@@ -122,7 +127,7 @@ resource "aws_security_group" "apptier2" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["192.168.0.0/24"]
+    cidr_blocks = ["192.168.100.0/24"]
     }
 
     egress {
@@ -193,12 +198,7 @@ resource "aws_security_group" "db" {
     protocol    = "tcp"
     cidr_blocks = ["192.168.20.0/24"]
     }
-ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["192.168.0.0/24"]
-    }
+
     egress {
       protocol    = "-1"
       from_port   = 0
@@ -242,7 +242,7 @@ resource "aws_db_instance" "appdb" {
 
 
 ## management Server for managing servers
-resource "aws_instance" "tier2web" {
+resource "aws_instance" "mgmt" {
   ami           = "ami-0b6d8a6db0c665fb7"
   instance_type = "t2.micro"
   vpc_security_group_ids = "aws_security_group.webtier1.id"
@@ -255,15 +255,27 @@ resource "aws_instance" "tier2web" {
 
 
 output "public_ip" {
-  value       = aws_instance.tier2app.public_ip
+  value       = aws_instance.mgmt.public_ip
   description = "The public IP of the web server"
 
 }
 
-resource "aws_security_group" "mgmt" {
+#provision of  mgmt subnet
+resource "aws_subnet" "mgmt_subnet" {
+  vpc_id     = aws_vpc.app_vpc.id
+  cidr_block = "192.168.100.0/24"
+  
+  tags = {
+    Name = "mgmt subnet"
+  }
+  depends_on = [aws_vpc_dhcp_options_association.dns_resolver]
+}
+
+
+resource "aws_security_group" "mgmtsecg" {
   name = "security-group-mgmt"
   vpc_id = aws_vpc.app_vpc.id
-  subnet_id = aws_subnet.web_subnet.id
+  subnet_id = aws_subnet.mgmt_subnet.id
 
   ingress {
     from_port   = 22
@@ -276,7 +288,7 @@ resource "aws_security_group" "mgmt" {
       protocol    = "-1"
       from_port   = 0
       to_port     = 0
-      cidr_blocks = ["192.168.0.0/24"]
+      cidr_blocks = ["0.0.0.0/0"]
       }
 
 }
